@@ -1,6 +1,3 @@
-Claro! Aqui está o conteúdo completo em um único arquivo Markdown:
-
-
 # Gerenciador de Tarefas
 
 Este é um sistema de gerenciamento de tarefas simples, desenvolvido em Rust. O objetivo é permitir que o usuário gerencie suas tarefas, com a capacidade de realizar as quatro operações CRUD (Criar, Ler, Atualizar e Deletar) em uma entidade de domínio chamada `Tarefa`. As tarefas são armazenadas de forma persistente no sistema de arquivos, utilizando formatos binários eficientes, e com validação de dados de entrada.
