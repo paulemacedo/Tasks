@@ -2,6 +2,8 @@
 
 Este é um sistema de gerenciamento de tarefas simples, desenvolvido em Rust. O objetivo é permitir que o usuário gerencie suas tarefas, com a capacidade de realizar as quatro operações CRUD (Criar, Ler, Atualizar e Deletar) em uma entidade de domínio chamada `Tarefa`. As tarefas são armazenadas de forma persistente no sistema de arquivos, utilizando formatos binários eficientes, e com validação de dados de entrada.
 
+Foi desenvolvido para a disciplina **Tópicos Especiais em Programação III (Programação em Rust)**, optativa, ministrada pelo professor **Diogo Silveira Mendonça**.
+
 ## Funcionalidades
 
 - **Criar Tarefa**: Adicionar novas tarefas ao sistema.
@@ -68,12 +70,10 @@ fn carregar_tarefas(caminho: &str) -> std::io::Result<Vec<Tarefa>> {
 O sistema realiza validação de dados de entrada para garantir que as tarefas sejam inseridas com dados válidos. Caso os dados fornecidos não estejam no formato esperado, o sistema não os aceitará, evitando inconsistências.
 
 ## O que falta implementar
-
-
-- **Operação de Atualização**: Implementar a funcionalidade para editar as tarefas existentes.
-- **Operação de Deleção**: Implementar a funcionalidade para remover tarefas do sistema.
-- **Validação de Entrada**: Melhorar a validação para garantir que as entradas do usuário estejam corretas (por exemplo, a data de vencimento não pode ser no passado).
-- **Testes Automatizados**: Criar testes automatizados para as funções principais, garantindo o bom funcionamento do sistema.
+- [ ] **Operação de Atualização**: Implementar a funcionalidade para editar as tarefas existentes.
+- [ ] **Operação de Deleção**: Implementar a funcionalidade para remover tarefas do sistema.
+- [ ] **Validação de Entrada**: Melhorar a validação para garantir que as entradas do usuário estejam corretas (por exemplo, a data de vencimento não pode ser no passado).
+- [ ] **Testes Automatizados**: Criar testes automatizados para as funções principais, garantindo o bom funcionamento do sistema.
 
 ## Como rodar
 
