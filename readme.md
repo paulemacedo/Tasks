@@ -79,8 +79,8 @@ O sistema realiza validação de dados de entrada para garantir que as tarefas s
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/username/gerenciador-de-tarefas.git
-   cd gerenciador-de-tarefas
+   git clone https://github.com/paulemacedo/tasks.git
+   cd tasks
    ```
 
 2. Compile o projeto:
