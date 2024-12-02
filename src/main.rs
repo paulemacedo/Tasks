@@ -3,9 +3,11 @@ use std::fs::File;
 use std::io::{self, BufReader, BufWriter};
 use std::str::FromStr;
 use chrono::NaiveDate;
+use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Clone)]
 struct Tarefa {
+    id: String,  // Mudança chave: usar String em vez de Uuid diretamente
     titulo: String,
     prioridade: u8,
     data_vencimento: NaiveDate,
@@ -60,6 +62,7 @@ fn adicionar_tarefa(tarefas: &mut Vec<Tarefa>) {
     };
 
     let tarefa = Tarefa {
+        id: Uuid::new_v4().to_string(),  // Converte UUID para String
         titulo,
         prioridade,
         data_vencimento,
@@ -76,7 +79,7 @@ fn listar_tarefas(tarefas: &Vec<Tarefa>) {
         return;
     }
 
-    for (i, tarefa) in tarefas.iter().enumerate() {
+    for tarefa in tarefas {
         let status_str = match tarefa.status {
             Status::Pendente => "Pendente",
             Status::EmProgresso => "Em Progresso",
@@ -84,8 +87,8 @@ fn listar_tarefas(tarefas: &Vec<Tarefa>) {
         };
 
         println!(
-            "{}. {} (Prioridade: {}, Vencimento: {}, Status: {})",
-            i + 1,
+            "ID: {} | {} (Prioridade: {}, Vencimento: {}, Status: {})",
+            tarefa.id,
             tarefa.titulo,
             tarefa.prioridade,
             tarefa.data_vencimento,
@@ -94,37 +97,92 @@ fn listar_tarefas(tarefas: &Vec<Tarefa>) {
     }
 }
 
-fn atualizar_status(tarefas: &mut Vec<Tarefa>) {
+fn atualizar_tarefa(tarefas: &mut Vec<Tarefa>) {
     listar_tarefas(tarefas);
 
     if tarefas.is_empty() {
         return;
     }
 
-    println!("Digite o número da tarefa que deseja atualizar:");
-    let indice: usize = loop {
-        match usize::from_str(&ler_entrada()) {
-            Ok(num) if num >= 1 && num <= tarefas.len() => break num - 1,
-            _ => println!("Por favor, digite um número válido"),
-        }
-    };
+    println!("Digite o ID da tarefa que deseja atualizar:");
+    let id_str = ler_entrada();
 
-    println!("Escolha o novo status:");
-    println!("1. Pendente");
-    println!("2. Em Progresso");
-    println!("3. Concluída");
+    if let Some(tarefa) = tarefas.iter_mut().find(|t| t.id == id_str) {
+        println!("Escolha o que deseja atualizar:");
+        println!("1. Título");
+        println!("2. Prioridade");
+        println!("3. Data de Vencimento");
+        println!("4. Status");
 
-    let novo_status = loop {
         match ler_entrada().as_str() {
-            "1" => break Status::Pendente,
-            "2" => break Status::EmProgresso,
-            "3" => break Status::Concluida,
-            _ => println!("Por favor, escolha uma opção válida (1-3)"),
-        }
-    };
+            "1" => {
+                println!("Digite o novo título:");
+                tarefa.titulo = ler_entrada();
+            },
+            "2" => {
+                println!("Digite a nova prioridade (1-5):");
+                tarefa.prioridade = loop {
+                    match u8::from_str(&ler_entrada()) {
+                        Ok(num) if num >= 1 && num <= 5 => break num,
+                        _ => println!("Por favor, digite um número entre 1 e 5"),
+                    }
+                };
+            },
+            "3" => {
+                println!("Digite a nova data de vencimento (AAAA-MM-DD):");
+                tarefa.data_vencimento = loop {
+                    match NaiveDate::parse_from_str(&ler_entrada(), "%Y-%m-%d") {
+                        Ok(data) => break data,
+                        Err(_) => println!("Formato inválido. Use AAAA-MM-DD"),
+                    }
+                };
+            },
+            "4" => {
+                println!("Escolha o novo status:");
+                println!("1. Pendente");
+                println!("2. Em Progresso");
+                println!("3. Concluída");
 
-    tarefas[indice].status = novo_status;
-    println!("Status atualizado com sucesso!");
+                tarefa.status = match ler_entrada().as_str() {
+                    "1" => Status::Pendente,
+                    "2" => Status::EmProgresso,
+                    "3" => Status::Concluida,
+                    _ => {
+                        println!("Opção inválida!");
+                        return;
+                    }
+                };
+            },
+            _ => {
+                println!("Opção inválida!");
+                return;
+            }
+        }
+
+        println!("Tarefa atualizada com sucesso!");
+    } else {
+        println!("Tarefa não encontrada!");
+    }
+}
+
+fn excluir_tarefa(tarefas: &mut Vec<Tarefa>) {
+    listar_tarefas(tarefas);
+
+    if tarefas.is_empty() {
+        return;
+    }
+
+    println!("Digite o ID da tarefa que deseja excluir:");
+    let id_str = ler_entrada();
+
+    let tamanho_inicial = tarefas.len();
+    tarefas.retain(|t| t.id != id_str);
+
+    if tarefas.len() < tamanho_inicial {
+        println!("Tarefa excluída com sucesso!");
+    } else {
+        println!("Tarefa não encontrada!");
+    }
 }
 
 fn main() {
@@ -136,14 +194,16 @@ fn main() {
         println!("\nEscolha uma opção:");
         println!("1. Adicionar tarefa");
         println!("2. Listar tarefas");
-        println!("3. Atualizar status");
-        println!("4. Sair");
+        println!("3. Atualizar tarefa");
+        println!("4. Excluir tarefa");
+        println!("5. Sair");
 
         match ler_entrada().as_str() {
             "1" => adicionar_tarefa(&mut tarefas),
             "2" => listar_tarefas(&tarefas),
-            "3" => atualizar_status(&mut tarefas),
-            "4" => break,
+            "3" => atualizar_tarefa(&mut tarefas),
+            "4" => excluir_tarefa(&mut tarefas),
+            "5" => break,
             _ => println!("Opção inválida!"),
         }
 
