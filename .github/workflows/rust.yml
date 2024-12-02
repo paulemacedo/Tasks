@@ -2,7 +2,7 @@ name: Rust CI
 
 on:
   push:
-    branches: [ "main" ]  # Alterado para "main", ajuste se necessário
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -14,7 +14,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
     - name: Cache Cargo registry
       uses: actions/cache@v3
@@ -38,6 +39,9 @@ jobs:
         toolchain: stable
         override: true
 
+    - name: Update dependencies
+      run: cargo update  # Garante que as dependências estão atualizadas
+
     - name: Run cargo fmt check
       run: cargo fmt -- --check
 
@@ -49,3 +53,4 @@ jobs:
 
     - name: Run tests
       run: cargo test --verbose
+
