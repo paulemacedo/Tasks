@@ -16,14 +16,16 @@ Foi desenvolvido para a disciplina **Tópicos Especiais em Programação III (Pr
 O sistema usa as seguintes estruturas de dados:
 
 - **Tarefa**: Representa uma tarefa individual e contém:
+  - `id`: Identificador único da tarefa (String).
   - `titulo`: Título da tarefa (String).
   - `prioridade`: Prioridade da tarefa (u8).
   - `data_vencimento`: Data de vencimento da tarefa (NaiveDate).
   - `status`: Status da tarefa, representado por um Enum (`Pendente`, `EmProgresso`, `Concluida`).
-  
+
 ```rust
 #[derive(Serialize, Deserialize)]
 struct Tarefa {
+    id: String,  // Mudança chave: usar String em vez de Uuid diretamente
     titulo: String,
     prioridade: u8,
     data_vencimento: NaiveDate,
@@ -39,17 +41,14 @@ enum Status {
 ```
 
 ## Camada de Persistência
+A camada de persistência é responsável por armazenar as tarefas de maneira eficiente no sistema de arquivos, utilizando o formato JSON. A biblioteca serde é usada para serialização e deserialização dos dados, e chrono para manipulação de datas.
 
-A camada de persistência é responsável por armazenar as tarefas de maneira eficiente no sistema de arquivos, utilizando o formato JSON. A biblioteca `serde` é usada para serialização e deserialização dos dados, e `chrono` para manipulação de datas.
-
-As tarefas são salvas em um arquivo utilizando a função `salvar_tarefas`, e podem ser carregadas novamente com a função `carregar_tarefas`.
+As tarefas são salvas em um arquivo utilizando a função salvar_tarefas, e podem ser carregadas novamente com a função carregar_tarefas.
 
 ### Funções de Persistência:
-
-- **salvar_tarefas**: Recebe um vetor de tarefas e salva no arquivo.
-- **carregar_tarefas**: Carrega o vetor de tarefas a partir de um arquivo JSON.
-
-```rust
+- salvar_tarefas: Recebe um vetor de tarefas e salva no arquivo.
+- carregar_tarefas: Carrega o vetor de tarefas a partir de um arquivo JSON.
+``` rust
 fn salvar_tarefas(tarefas: &Vec<Tarefa>, caminho: &str) -> std::io::Result<()> {
     let arquivo = File::create(caminho)?;
     let writer = BufWriter::new(arquivo);
@@ -64,48 +63,39 @@ fn carregar_tarefas(caminho: &str) -> std::io::Result<Vec<Tarefa>> {
     Ok(tarefas)
 }
 ```
-
 ## Validação de Dados
-
 O sistema realiza validação de dados de entrada para garantir que as tarefas sejam inseridas com dados válidos. Caso os dados fornecidos não estejam no formato esperado, o sistema não os aceitará, evitando inconsistências.
 
 ## O que falta implementar
-- [ ] **Operação de Atualização**: Implementar a funcionalidade para editar as tarefas existentes.
-- [ ] **Operação de Deleção**: Implementar a funcionalidade para remover tarefas do sistema.
-- [ ] **Validação de Entrada**: Melhorar a validação para garantir que as entradas do usuário estejam corretas (por exemplo, a data de vencimento não pode ser no passado).
-- [ ] **Testes Automatizados**: Criar testes automatizados para as funções principais, garantindo o bom funcionamento do sistema.
+ - [x] Operação de Atualização: Implementar a funcionalidade para editar as tarefas existentes.
+ - [x] Operação de Deleção: Implementar a funcionalidade para remover tarefas do sistema.
+ - [x] Validação de Entrada: Melhorar a validação para garantir que as entradas do usuário estejam corretas (por exemplo, a data de vencimento não pode ser no passado).
+ - [x] Testes Automatizados: Criar testes automatizados para as funções principais, garantindo o bom funcionamento do sistema.
 
 ## Como rodar
 
 1. Clone o repositório:
-   ```bash
-   git clone https://github.com/paulemacedo/tasks.git
-   cd tasks
-   ```
 
+``` bash
+git clone https://github.com/paulemacedo/tasks.git
+cd tasks
+``` 
 2. Compile o projeto:
-   ```bash
-   cargo build
-   ```
-
+``` bash
+cargo build
+``` 
 3. Execute o programa:
-   ```bash
-   cargo run
-   ```
+``` bash
+cargo run
+```
 
 ## Tecnologias utilizadas
-
-- **Rust**: Linguagem de programação usada para o desenvolvimento do sistema.
-- **Serde**: Biblioteca para serialização e deserialização de dados JSON.
-- **Chrono**: Biblioteca para manipulação de datas e horas.
+- Rust: Linguagem de programação usada para o desenvolvimento do sistema.
+- Serde: Biblioteca para serialização e deserialização de dados JSON.
+- Chrono: Biblioteca para manipulação de datas e horas.
 
 ## Contribuições
-
 Este projeto está sendo desenvolvido por Paule Macedo. Você pode contribuir para o projeto através de pull requests.
 
 ## Prazo de entrega
-
 O prazo de entrega é dia 02/12, onde haverá a apresentação dos trabalhos.
-
-
-
