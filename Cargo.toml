@@ -1,10 +1,22 @@
 [package]
 name = "tasks"
 version = "0.1.0"
+authors = ["[your_name] <[your_email]>"]
 edition = "2021"
 
 [dependencies]
-serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
-chrono = { version = "0.4", features = ["serde"] }
-uuid = { version = "1.11.0", features = ["v4"] }
+ink = { version = "5.1.1", default-features = false }
+scale-info = { version = "2.11.6", default-features = false, features = ["derive"] }
+parity-scale-codec = { version = "3.6.12", default-features = false, features = ["derive"] }
+
+[lib]
+path = "lib.rs"
+
+[features]
+default = ["std"]
+std = [
+    "ink/std",
+    "scale-info/std",
+    "parity-scale-codec/std",
+]
+ink-as-dependency = []
