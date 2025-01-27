@@ -1,22 +1,29 @@
 name: Rust
-
 on:
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-
 env:
   CARGO_TERM_COLOR: always
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
+    
+    # Instala o cargo-contract
+    - name: Install cargo-contract
+      run: cargo install cargo-contract --force
+      
+    # Instala dependências do sistema necessárias
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential pkg-config libssl-dev
+        
     - name: Build
-      run: cargo build --verbose
+      run: cargo contract build --verbose
+      
     - name: Run tests
       run: cargo test --verbose
