@@ -51,6 +51,7 @@ mod task_management {
         task_id: u32,
     }
 
+
     impl TaskManager {
         #[ink(constructor)]
         pub fn new() -> Self {
@@ -92,18 +93,12 @@ mod task_management {
         }
 
         #[ink(message)]
-        pub fn get_tasks(&self, from_id: u32, limit: u32) -> Vec<(u32, Task)> {
+        pub fn get_tasks(&self) -> Vec<(u32, Task)> {
             let mut tasks = Vec::new();
-            let mut current_id = from_id;
-            // Use saturating_add to prevent overflow
-            let end_id = core::cmp::min(from_id.saturating_add(limit), self.task_count);
-
-            while current_id <= end_id {
-                if let Some(task) = self.tasks.get(current_id) {
-                    tasks.push((current_id, task));
+            for task_id in 1..=self.task_count {
+                if let Some(task) = self.tasks.get(task_id) {
+                    tasks.push((task_id, task));
                 }
-                // Use saturating_add for safe increment
-                current_id = current_id.saturating_add(1);
             }
             tasks
         }
