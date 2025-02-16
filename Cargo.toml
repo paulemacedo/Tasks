@@ -1,22 +1,32 @@
 [package]
-name = "tasks"
+name = "task-pallet"
 version = "0.1.0"
-authors = ["[your_name] <[your_email]>"]
 edition = "2021"
+license = "Apache-2.0"
+description = "FRAME pallet to manage tasks"
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
-ink = { version = "5.1.1", default-features = false }
-scale-info = { version = "2.11.6", default-features = false, features = ["derive"] }
-parity-scale-codec = { version = "3.6.12", default-features = false, features = ["derive"] }
+frame-support = { workspace = true }
+frame-system = { workspace = true }
+scale-info = { features = ["derive"], workspace = true }
+sp-runtime = { workspace = true }
+parity-scale-codec = { version = "3.0", features = ["derive"] }
 
-[lib]
-path = "lib.rs"
+[dev-dependencies]
+sp-core = { workspace = true }
+sp-io = { workspace = true }
 
 [features]
 default = ["std"]
 std = [
-    "ink/std",
+    "frame-support/std",
+    "frame-system/std",
     "scale-info/std",
-    "parity-scale-codec/std",
+    "sp-runtime/std",
 ]
-ink-as-dependency = []
